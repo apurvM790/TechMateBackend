@@ -3,10 +3,12 @@ const mongooose = require("mongoose");
 const connectionRequestSchema = new mongooose.Schema({
     fromUserId : {
         type: mongooose.Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     toUserId : {
         type: mongooose.Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     status : {
@@ -18,6 +20,8 @@ const connectionRequestSchema = new mongooose.Schema({
     }
 },
 { timestamps: true});
+
+connectionRequestSchema.index({fromUserId: 1, toUserId: 1});
 
 const connectionRequestModel = new mongooose.model("connectionRequestModel", connectionRequestSchema);
 

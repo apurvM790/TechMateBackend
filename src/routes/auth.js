@@ -53,7 +53,7 @@ authRouter.post("/login",async (req,res)=>{
             const token = await jwt.sign({_id: user._id}, "DEV@Tinder$7905", { expiresIn: "7d" });
 
             // Add token to the cookie and send back to the user..
-            res.cookie("token",token, {expires : new Date(Date.now() + 8 * 3600000)});
+            res.cookie("token",token, {expires : new Date(Date.now() + 7 * 3600000)});
             res.send("Login successfully..!");
         }
         else{
