@@ -34,11 +34,11 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ["M","F","other"]
+        enum: ["Male","Female","other"]
     },
     photoUrl: {
         type: String,
-        default: "https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=360",
+        default: "https://w1.pngwing.com/pngs/743/500/png-transparent-circle-silhouette-logo-user-user-profile-green-facial-expression-nose-cartoon-thumbnail.png",
 
     },
     about: {

@@ -1,6 +1,7 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
+const User = require("../models/user");
 
 const userRouter = express.Router();
 
@@ -49,5 +50,51 @@ userRouter.get("/user/connections", userAuth, async (req,res)=>{
     }
 
 });
+
+
+userRouter.get("/feed", userAuth, async (req,res)=>{
+    try {
+        const loggedInUser = req.user;
+        // if(!([...req.query.page].every(c => "0987654321".includes(c))) || (req.query.page==="")){
+        //     throw new Error("Something Wrong In Query!");
+        // }
+
+        // if(!([...req.query.limit].every(c => "0987654321".includes(c))) || (req.query.limit==="")){
+        //     throw new Error("Something Wrong In Query!");
+        // }
+
+        let limit = parseInt(req.query.limit) || 10;
+        limit = limit<=20 ? limit : 20;
+
+        const page = parseInt(req.query.page) || 1;
+
+        const skip = (page-1)*limit;
+
+        const connectionRequest = await ConnectionRequest.find({
+            $or: [
+                {fromUserId: loggedInUser._id},
+                {toUserId: loggedInUser._id},
+            ]
+        }).select("fromUserId toUserId");
+
+        const hideUsersFromFeed = new Set();
+        connectionRequest.forEach((row)=>{
+            hideUsersFromFeed.add(row.fromUserId.toString());
+            hideUsersFromFeed.add(row.toUserId.toString());
+        });
+
+        const feed = await User.find({
+            $and:[
+            { _id: {$nin:  Array.from(hideUsersFromFeed) }},
+            { _id: {$ne: loggedInUser._id}},
+        ]
+        }).select(USER_SAFE_DATA).skip(skip).limit(limit);
+
+        res.json({message: "feed fetched successfully.!", data:feed});
+        
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }
+})
 
 module.exports = userRouter;
