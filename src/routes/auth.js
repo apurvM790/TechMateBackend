@@ -23,7 +23,7 @@ authRouter.post("/signup",async (req,res)=>{
         }
 
         const photoUrl = (gender=="Male" || gender=="other") ? MALE_URL : FEMALE_URL ;
-        
+            
         // Encrypting password..
         const passwordHash =await bcrypt.hash(password, 10);
         // console.log(passwordHash);
@@ -62,7 +62,7 @@ authRouter.post("/login",async (req,res)=>{
         const isCorrect =await bcrypt.compare(password, user.password);
         if(isCorrect){
             // creating JWT token..
-            const token = await jwt.sign({_id: user._id}, "DEV@Tinder$7905", { expiresIn: "7d" });
+            const token = await jwt.sign({_id: user._id}, process.env.JWT_SECRET, { expiresIn: "7d" });
 
             // Add token to the cookie and send back to the user..
             res.cookie("token",token, {expires : new Date(Date.now() + 7 * 3600000)});

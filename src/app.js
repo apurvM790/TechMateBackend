@@ -5,6 +5,9 @@ const cors = require("cors");
 
 const app = express();
 
+require('dotenv').config();
+
+
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true,
@@ -16,21 +19,23 @@ const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
+const messageRouter = require("./routes/message");
 
 app.use("/",authRouter);
 app.use("/",profileRouter);
 app.use("/",requestRouter);
 app.use("/",userRouter);
+app.use("/",messageRouter);
 
 connectDB()
 .then(()=>{
     console.log("DataBase connected succesfully...!");
     
-    app.listen(3000,()=>{
+    app.listen(process.env.PORT,()=>{
         console.log("Server is listening at port: ",3000);
     });
 
 })
 .catch(err=>{
-    console.error("DataBase not connected...!");
+    console.error("DataBase not connected...!",err);
 });

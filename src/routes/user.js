@@ -55,13 +55,6 @@ userRouter.get("/user/connections", userAuth, async (req,res)=>{
 userRouter.get("/feed", userAuth, async (req,res)=>{
     try {
         const loggedInUser = req.user;
-        // if(!([...req.query.page].every(c => "0987654321".includes(c))) || (req.query.page==="")){
-        //     throw new Error("Something Wrong In Query!");
-        // }
-
-        // if(!([...req.query.limit].every(c => "0987654321".includes(c))) || (req.query.limit==="")){
-        //     throw new Error("Something Wrong In Query!");
-        // }
 
         let limit = parseInt(req.query.limit) || 10;
         limit = limit<=20 ? limit : 20;
