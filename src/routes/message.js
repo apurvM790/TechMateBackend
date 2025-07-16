@@ -2,7 +2,7 @@ const express = require("express");
 const Message = require("../models/message");
 const Connection = require("../models/connectionRequest");
 const { userAuth } = require("../middlewares/auth");
-const { cloudinary } = require("../utils/cloudinary");
+const cloudinary = require("../utils/cloudinary");
 
 const messageRouter = express.Router();
 
@@ -49,24 +49,25 @@ messageRouter.get("/message/:id", userAuth, async (req,res)=>{
     }
 });
 
-messageRouter.post("message/:id/send", userAuth, async (req,res)=>{
+messageRouter.post("/message/send/:id", userAuth, async (req,res)=>{
     try {
         const { id:receiverId } = req.params;
         const { text, image } = req.body;
+        
         const senderId = req.user._id;
-
         let imageUrl;
         if(image){
         const uploadResponse = await cloudinary.uploader.upload(image);
         imageUrl = uploadResponse.secure_url;
         }
+        console.log(imageUrl);
 
         const newMessage = new Message({ senderId, receiverId, text, image:imageUrl});
         await newMessage.save();
 
         //todo: realtime chat using socket.io
 
-        res.status.json({data:newMessage});
+        res.status(200).json({data:newMessage});
 
     } catch (error) {
         res.status(400).json(error.message);
