@@ -9,7 +9,7 @@ console.log("socket created");
 
 const io = socket(server, {
         cors:{
-            origin: ["http://localhost:5173/", "https://tech-mate-frontend.vercel.app"],
+            origin: ["http://localhost:5173/", "https://tech-mate-frontend-kl6c.vercel.app"],
             methods: ["GET", "POST"],
             credentials: true,
         }
