@@ -8,15 +8,22 @@ const { BASE_URL } = require("./utils/constants");
 require('dotenv').config();
 
 
+const allowedOrigins = [
+  "https://tech-mate-frontend-kl6c.vercel.app",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-    origin: BASE_URL,
-    credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
 
-app.options("*", cors({
-  origin: BASE_URL,
-  credentials: true,
-}));
 
 app.use(express.json()) // middleware to convert json to javascript object or readable form...
 app.use(cookieParser()); // middleware to parse cookies stored in the browser..
