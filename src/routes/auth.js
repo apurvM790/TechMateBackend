@@ -64,7 +64,12 @@ authRouter.post("/login",async (req,res)=>{
             const token = await jwt.sign({_id: user._id}, process.env.JWT_SECRET, { expiresIn: "7d" });
 
             // Add token to the cookie and send back to the user..
-            res.cookie("token",token, {expires : new Date(Date.now() + 7 * 3600000)});
+            res.cookie("token",token, {
+                httpOnly: true,
+                secure: true, // make sure to set true if you're using HTTPS (which Render does)
+                sameSite: "None",
+                expires : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            });
             res.status(200).json({message:"data fetched successfully!", data:user});
         }
         else{
