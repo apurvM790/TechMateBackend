@@ -62,12 +62,14 @@ authRouter.post("/login",async (req,res)=>{
         if(isCorrect){
             // creating JWT token..
             const token = await jwt.sign({_id: user._id}, process.env.JWT_SECRET, { expiresIn: "7d" });
+            const isProduction = process.env.NODE_ENV === "production";
 
+            console.log("NODE_ENV:", process.env.NODE_ENV);
             // Add token to the cookie and send back to the user..
             res.cookie("token",token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production", // make sure to set true if you're using HTTPS (which Render does)
-                sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+                secure: isProduction, // make sure to set true if you're using HTTPS (which Render does)
+                sameSite: isProduction ? "None" : "Lax",
                 expires : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             });
             res.status(200).json({message:"data fetched successfully!", data:user});
