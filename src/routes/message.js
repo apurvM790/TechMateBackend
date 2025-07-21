@@ -1,3 +1,4 @@
+const { io } = require("../utils/socket");
 const express = require("express");
 const Message = require("../models/message");
 const Connection = require("../models/connectionRequest");
@@ -60,12 +61,13 @@ messageRouter.post("/message/send/:id", userAuth, async (req,res)=>{
         const uploadResponse = await cloudinary.uploader.upload(image);
         imageUrl = uploadResponse.secure_url;
         }
-        console.log(imageUrl);
 
         const newMessage = new Message({ senderId, receiverId, text, image:imageUrl});
         await newMessage.save();
 
         //todo: realtime chat using socket.io
+        const roomId = [senderId, receiverId].sort().join("$_$");
+        io.to(roomId).emit("receiveMessage", newMessage);
 
         res.status(200).json({data:newMessage});
 

@@ -26,7 +26,6 @@ authRouter.post("/signup",async (req,res)=>{
             
         // Encrypting password..
         const passwordHash =await bcrypt.hash(password, 10);
-        // console.log(passwordHash);
 
         // creating the new instance of the schema..
         const user = new User({
