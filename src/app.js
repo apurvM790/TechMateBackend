@@ -12,6 +12,12 @@ app.use(cors({
     origin: BASE_URL,
     credentials: true,
 }));
+
+app.options("*", cors({
+  origin: BASE_URL,
+  credentials: true,
+}));
+
 app.use(express.json()) // middleware to convert json to javascript object or readable form...
 app.use(cookieParser()); // middleware to parse cookies stored in the browser..
 

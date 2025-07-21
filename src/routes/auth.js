@@ -72,6 +72,7 @@ authRouter.post("/login",async (req,res)=>{
                 sameSite: isProduction ? "None" : "Lax",
                 expires : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             });
+            console.log("TOKEN SET");
             res.status(200).json({message:"data fetched successfully!", data:user});
         }
         else{
