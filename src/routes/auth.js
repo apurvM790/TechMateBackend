@@ -66,8 +66,8 @@ authRouter.post("/login",async (req,res)=>{
             // Add token to the cookie and send back to the user..
             res.cookie("token",token, {
                 httpOnly: true,
-                secure: true, // make sure to set true if you're using HTTPS (which Render does)
-                sameSite: "None",
+                secure: process.env.NODE_ENV === "production", // make sure to set true if you're using HTTPS (which Render does)
+                sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
                 expires : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             });
             res.status(200).json({message:"data fetched successfully!", data:user});
